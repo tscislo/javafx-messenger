@@ -33,8 +33,9 @@ public class Main extends Application {
                 event.consume();
             }
         });
-        chatController.socketClient.setUserName(Alert.showInputDialog());
-        chatController.socketClient.startThread();
+        chatController.getUserName();
+//        chatController.socketClient.setUserName(Alert.showInputDialog());
+//        chatController.socketClient.startThread();
     }
 
 

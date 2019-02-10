@@ -4,6 +4,7 @@ import javafx.concurrent.Task;
 
 import java.io.*;
 import java.net.Socket;
+import java.util.UUID;
 
 public class SocketClient {
     private String serverAddress;
@@ -16,6 +17,9 @@ public class SocketClient {
     private String response;
 
     private String userName;
+    private Integer UID;
+
+    private int PROTOCOL_PREFIX_LENGTH = 3;
 
 
     public SocketClient(String serverAddress, int portNumber) {
@@ -38,13 +42,19 @@ public class SocketClient {
                 System.out.println("Thread started");
                 while (true) {
                     String msg = inputBufferedReader.readLine();
-                    System.out.println(msg);
                     if (msg.startsWith("RDY")) {
                         outputPrintWriter.println(userName);
                     } else if (msg.startsWith("UID")) {
-
+                        UID = Integer.parseInt(msg.substring(PROTOCOL_PREFIX_LENGTH));
+                        System.out.println("My UID -> " + UID);
                     } else if (msg.startsWith("MSG")) {
-
+                        msg = msg.substring(PROTOCOL_PREFIX_LENGTH);
+                        String[] param = msg.split("\t");
+                        Integer senderUID = Integer.parseInt(param[0]);
+                        String senderName = param[1];
+                        if (!senderUID.equals(UID)) {
+                            System.out.println("Msg from " + senderName + " " + param[2]);
+                        }
                     }
                 }
 
@@ -62,8 +72,8 @@ public class SocketClient {
         return this.response;
     }
 
-    public void sendMsg(String mgs) {
-//        this.outputPrintWriter.println("Test");
+    public void sendMsg(String msg) {
+        this.outputPrintWriter.println(msg);
     }
 
     public String getResponse() {
@@ -79,4 +89,6 @@ public class SocketClient {
     public void setUserName(String userName) {
         this.userName = userName;
     }
+
+
 }
