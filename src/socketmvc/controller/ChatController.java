@@ -2,6 +2,10 @@ package socketmvc.controller;
 
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
+import javafx.scene.layout.VBox;
 import javafx.scene.web.WebView;
 import javafx.stage.Stage;
 import socketmvc.Alert;
@@ -21,7 +25,10 @@ public class ChatController implements Initializable {
     public TextField messageField;
 
     @FXML
-    public WebView webView;
+    public Label userName;
+
+    @FXML
+    public TextArea textArea;
 
     public SocketClient socketClient;
 
@@ -37,6 +44,8 @@ public class ChatController implements Initializable {
 
     public void getUserName() {
         socketClient.setUserName(Alert.showInputDialog());
+        this.socketClient.textArea = this.textArea;
+        this.userName.setText(socketClient.userName);
         socketClient.startThread();
     }
 
@@ -52,6 +61,8 @@ public class ChatController implements Initializable {
 
     @FXML
     public void send() {
+        System.out.println("sending " + this.messageField.getText());
         this.socketClient.sendMsg(this.messageField.getText());
+        this.messageField.clear();
     }
 }

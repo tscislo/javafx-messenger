@@ -1,6 +1,11 @@
 package socketmvc;
 
 import javafx.concurrent.Task;
+import javafx.fxml.FXML;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
+import javafx.scene.layout.VBox;
 
 import java.io.*;
 import java.net.Socket;
@@ -16,8 +21,10 @@ public class SocketClient {
     private PrintWriter outputPrintWriter;
     private String response;
 
-    private String userName;
+    public String userName;
     private Integer UID;
+
+    public TextArea textArea;
 
     private int PROTOCOL_PREFIX_LENGTH = 3;
 
@@ -42,6 +49,7 @@ public class SocketClient {
                 System.out.println("Thread started");
                 while (true) {
                     String msg = inputBufferedReader.readLine();
+                    System.out.println("plain" + msg);
                     if (msg.startsWith("RDY")) {
                         outputPrintWriter.println(userName);
                     } else if (msg.startsWith("UID")) {
@@ -54,6 +62,7 @@ public class SocketClient {
                         String senderName = param[1];
                         if (!senderUID.equals(UID)) {
                             System.out.println("Msg from " + senderName + " " + param[2]);
+                            textArea.appendText(senderName + " " + param[2] + "\n");
                         }
                     }
                 }
